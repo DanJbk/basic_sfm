@@ -1,12 +1,12 @@
-import torch
-from kornia.geometry import find_fundamental, motion_from_essential_choose_solution
-from tqdm import tqdm
 
+import torch
 import random
+from tqdm import tqdm
+from kornia.geometry import find_fundamental, motion_from_essential_choose_solution
+
 import plotly
 import plotly.express as px
 import plotly.graph_objs as go
-
 
 def estimate_camera_poses(image1_features, image2_features, camera_matrix):
     """

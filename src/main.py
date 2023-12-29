@@ -1,13 +1,14 @@
-import numpy as np
+
 import torch
-import os
+import numpy as np
 
-from matplotlib import pyplot as plt
-from tqdm import tqdm
-
-from src.model import extract_3d_from_pairs, prepare_data, fit
-from src.utils import params_to_extrinsic
 from src.visibility_utils import show
+from src.utils import params_to_extrinsic
+from src.model import extract_3d_from_pairs, prepare_data, fit
+
+import plotly
+import plotly.express as px
+import plotly.graph_objs as go
 
 
 def default_arguments():
@@ -24,6 +25,8 @@ def default_arguments():
 
 def main():
     # camera parameters
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     camera_angle_x, width, height, imgs_path, matching_pairs = default_arguments()
 
@@ -55,8 +58,11 @@ def main():
     points_3d = torch.stack([p.mean(dim=0) for p in batch_point3d])
     colors = torch.stack([p.mean(dim=0) for p in batch_colors])
 
-    model, lossgraph = fit(camera_extrinsic, camera_intrinsic, batch_point2d, points_3d, batch_visibility, steps=4000, lr=0.005,
-        train_angle=False, camera_indecies_to_train=[], fit_cam_only=False, device="cuda")
+    model, lossgraph = fit(camera_extrinsic, camera_intrinsic, batch_point2d, points_3d, batch_visibility, steps=4000,
+        lr=0.005, train_angle=False, camera_indecies_to_train=[], fit_cam_only=False, device=device)
+
+    fig = px.line(x=torch.arange(len(lossgraph)), y=lossgraph, title="training loss")
+    fig.show()
 
     with torch.inference_mode():
         r_display = [r for r in params_to_extrinsic(model.extrinsics_params)[:, :-1, :3].squeeze().clone().detach().cpu()]

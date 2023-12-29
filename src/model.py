@@ -1,9 +1,9 @@
-import os
 
-import numpy as np
+import os
 import torch
-from matplotlib import pyplot as plt
+import numpy as np
 from tqdm import tqdm
+from matplotlib import pyplot as plt
 
 from src.utils import project_2d_to_3d, params_to_extrinsic, create_intrinsic, extrinsics_to_params
 from src.visibility_utils import estimate_camera_poses, create_extrinsics, move_points_to_camera_world_space, \
@@ -210,8 +210,8 @@ class ProjectionModel(torch.nn.Module):
         super().__init__()
 
         # set device
-        avilable_device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.device = device if (device is not None) else avilable_device
+        available_device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.device = device if (device is not None) else available_device
 
         # focal length
         self.camera_angle_x = torch.nn.Parameter(torch.tensor([0.6911112070083618]).to(self.device), requires_grad=True)
