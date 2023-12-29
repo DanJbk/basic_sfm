@@ -24,10 +24,10 @@ def default_arguments():
     return camera_angle_x, width, height, imgs_path, matching_pairs
 
 def main():
-    # camera parameters
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
+    # camera parameters
     camera_angle_x, width, height, imgs_path, matching_pairs = default_arguments()
 
     for i, pair in enumerate(matching_pairs):
@@ -52,16 +52,30 @@ def main():
 
     camera_extrinsic = torch.cat([c["extrinsic"] for c in camera_views])
     camera_intrinsic = torch.cat([c["intrinsic"] for c in camera_views])
-    batch_visibility, batch_point3d, batch_point2d, batch_colors = prepare_data(camera_views[:], visibility_matrix,
-                                                                                filter_visible=3)
+    batch_visibility, batch_point3d, batch_point2d, batch_colors = prepare_data(
+        camera_views[:],
+        visibility_matrix,
+        filter_visible=3
+    )
 
     points_3d = torch.stack([p.mean(dim=0) for p in batch_point3d])
     colors = torch.stack([p.mean(dim=0) for p in batch_colors])
 
-    model, lossgraph = fit(camera_extrinsic, camera_intrinsic, batch_point2d, points_3d, batch_visibility, steps=4000,
-        lr=0.005, train_angle=False, camera_indecies_to_train=[], fit_cam_only=False, device=device)
+    model, lossgraph = fit(
+        camera_extrinsic,
+        camera_intrinsic,
+        batch_point2d,
+        points_3d,
+        batch_visibility,
+        steps=4000,
+        lr=0.005,
+        train_angle=False,
+        camera_indecies_to_train=[],
+        fit_cam_only=False,
+        device=device
+    )
 
-    # visulize
+    # visualize
 
     fig = px.line(x=torch.arange(len(lossgraph)), y=lossgraph, title="training loss")
     fig.show()

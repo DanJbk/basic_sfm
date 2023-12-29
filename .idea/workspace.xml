@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3afa3d38-7eb4-4c71-a153-7b79a2f339ff" name="Changes" comment="added full functionality">
+    <list default="true" id="3afa3d38-7eb4-4c71-a153-7b79a2f339ff" name="Changes" comment="added visuals, ordered imports and improved formatting">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/visibility_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/visibility_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,12 +117,29 @@
       <option name="project" value="LOCAL" />
       <updated>1703886101923</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added visuals, ordered imports and improved formatting">
+      <option name="closed" value="true" />
+      <created>1703887959715</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1703887959715</updated>
+    </task>
+    <task id="LOCAL-00006" summary="added visuals, ordered imports and improved formatting">
+      <option name="closed" value="true" />
+      <created>1703887979910</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1703887979910</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit, model and helpful functions" />
     <MESSAGE value="added full functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="added full functionality" />
+    <MESSAGE value="added visuals, ordered imports and improved formatting" />
+    <option name="LAST_COMMIT_MESSAGE" value="added visuals, ordered imports and improved formatting" />
   </component>
 </project>
