@@ -61,6 +61,8 @@ def main():
     model, lossgraph = fit(camera_extrinsic, camera_intrinsic, batch_point2d, points_3d, batch_visibility, steps=4000,
         lr=0.005, train_angle=False, camera_indecies_to_train=[], fit_cam_only=False, device=device)
 
+    # visulize
+
     fig = px.line(x=torch.arange(len(lossgraph)), y=lossgraph, title="training loss")
     fig.show()
 
