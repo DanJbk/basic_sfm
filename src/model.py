@@ -152,12 +152,13 @@ def prepare_data(camera_views, visibility_matrix, filter_visible=-1):
     return batch_visibility, batch_point3d, batch_point2d, batch_colors
 
 
-def fit(camera_extrinsic, camera_intrinsic, labels, batch_point3d, batch_visibility, steps=3000, lr=0.005,
+def fit(camera_extrinsic, camera_intrinsic, labels, batch_point3d, batch_visibility, height, width, steps=3000, lr=0.005,
         train_angle=False, camera_indecies_to_train=[], fit_cam_only=False, device="cuda"):
     # define model
 
     model = ProjectionModel(camera_intrinsic.clone(), camera_extrinsic.clone(), batch_point3d.clone(),
-                            batch_visibility.clone(), device=device)
+                            batch_visibility.clone(), height=height, width=width, device=device)
+
     if len(camera_indecies_to_train) > 0:
         if fit_cam_only:
             model.create_hooks(camera_indecies_to_train, mask_extrinsics=True)
