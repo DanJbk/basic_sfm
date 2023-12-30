@@ -152,7 +152,7 @@ def prepare_data(camera_views, visibility_matrix, filter_visible=-1):
     return batch_visibility, batch_point3d, batch_point2d, batch_colors
 
 
-def fit(camera_extrinsic, camera_intrinsic, batch_point2d, batch_point3d, batch_visibility, steps=3000, lr=0.005,
+def fit(camera_extrinsic, camera_intrinsic, labels, batch_point3d, batch_visibility, steps=3000, lr=0.005,
         train_angle=False, camera_indecies_to_train=[], fit_cam_only=False, device="cuda"):
     # define model
 
@@ -165,8 +165,6 @@ def fit(camera_extrinsic, camera_intrinsic, batch_point2d, batch_point3d, batch_
             model.create_hooks(camera_indecies_to_train, mask_extrinsics=True, mask_points=True)
 
     # fit
-
-    labels = [batch_point2d[batch_visibility[:, index], index].to(device) for index in range(batch_visibility.shape[1])]
 
     params = [model.extrinsics_params, model.points3d]
     if train_angle: params.append(model.camera_angle_x)
@@ -192,7 +190,7 @@ def fit(camera_extrinsic, camera_intrinsic, batch_point2d, batch_point3d, batch_
                 lossgraph.append(loss.detach().item())
 
                 pbar.update()
-                pbar.set_description(f"current loss: {loss.detach().cpu().item():.4f}")
+                pbar.set_description(f"loss: {loss.detach().cpu().item():.4f}")
     except KeyboardInterrupt:
         pass
 

@@ -206,5 +206,3 @@ def show(Rs, Ts, points_3d, colors, onlypoints=False):
 
     # Show the figure
     fig.show()
-
-

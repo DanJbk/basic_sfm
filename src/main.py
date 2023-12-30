@@ -19,9 +19,10 @@ def default_arguments():
 
     # data paths
     imgs_path = "D:\\9.programming\\Plenoxels\\data\\lego\\test"
-    matching_pairs = np.load("D:\\9.programming\\sfm\\matching_pairs_updated.npy", allow_pickle=True)
+    matching_pairs = np.load("D:\\9.programming\\sfm\\matching_pairs_kornia.npy", allow_pickle=True)
 
     return camera_angle_x, width, height, imgs_path, matching_pairs
+
 
 def main():
 
@@ -61,13 +62,22 @@ def main():
     points_3d = torch.stack([p.mean(dim=0) for p in batch_point3d])
     colors = torch.stack([p.mean(dim=0) for p in batch_colors])
 
+    labels = [batch_point2d[batch_visibility[:, index], index].to(device) for index in range(batch_visibility.shape[1])]
+
+    # remove cameras with no relevant points
+    cameras_with_points_indices = torch.tensor([len(l) for l in labels]).greater(0)
+    camera_extrinsic = camera_extrinsic[cameras_with_points_indices]
+    camera_intrinsic = camera_intrinsic[cameras_with_points_indices]
+    batch_visibility = batch_visibility[:, cameras_with_points_indices]
+    labels = [l for l in labels if len(l) > 0]
+
     model, lossgraph = fit(
         camera_extrinsic,
         camera_intrinsic,
-        batch_point2d,
+        labels,
         points_3d,
         batch_visibility,
-        steps=4000,
+        steps=3500,
         lr=0.005,
         train_angle=False,
         camera_indecies_to_train=[],
