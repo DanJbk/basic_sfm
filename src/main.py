@@ -1,7 +1,10 @@
+import argparse
+import os
 
 import torch
 import numpy as np
 
+from src.feature_matching import match_features
 from src.visibility_utils import show
 from src.utils import params_to_extrinsic
 from src.model import extract_3d_from_pairs, prepare_data, fit
@@ -11,25 +14,13 @@ import plotly.express as px
 import plotly.graph_objs as go
 
 
-def default_arguments():
+def main(camera_angle_x, width, height, imgs_path, matching_pairs_path, visibility_thrshold=6, device=None):
 
-    camera_angle_x = 0.6911112070083618
-    width = 800
-    height = 800
-
-    # data paths
-    imgs_path = "D:\\9.programming\\Plenoxels\\data\\lego\\test"
-    matching_pairs = np.load("D:\\9.programming\\sfm\\matching_pairs_kornia.npy", allow_pickle=True)
-
-    return camera_angle_x, width, height, imgs_path, matching_pairs
-
-
-def main():
-
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    if device is None:
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # camera parameters
-    camera_angle_x, width, height, imgs_path, matching_pairs = default_arguments()
+    matching_pairs = np.load(matching_pairs_path, allow_pickle=True)
 
     for i, pair in enumerate(matching_pairs):
         matching_pairs[i]['0']['points'][:, 1] = height - pair['0']['points'][:, 1]
@@ -56,7 +47,7 @@ def main():
     batch_visibility, batch_point3d, batch_point2d, batch_colors = prepare_data(
         camera_views[:],
         visibility_matrix,
-        filter_visible=3
+        filter_visible=visibility_thrshold
     )
 
     points_3d = torch.stack([p.mean(dim=0) for p in batch_point3d])
@@ -79,7 +70,7 @@ def main():
         batch_visibility,
         width=width,
         height=height,
-        steps=5000,
+        steps=6000,
         lr=0.005,
         train_angle=False,
         camera_indecies_to_train=[],
@@ -97,8 +88,38 @@ def main():
         t_display = [t for t in params_to_extrinsic(model.extrinsics_params)[:, :-1, 3:].squeeze().clone().detach().cpu()]
         points3d_model = model.points3d.clone().detach().cpu().numpy()
 
+    np.save(
+        "bundle_adjusted",
+        {
+            "extrinsic_matrices": params_to_extrinsic(model.extrinsics_params).clone().detach().cpu().numpy(),
+            "intrinsic_matrices": model.get_intrinsics().clone().detach().cpu().numpy(),
+            "3d_points": model.points3d.clone().detach().cpu().numpy()
+        },
+        allow_pickle=True
+    )
+
     show(r_display, t_display, points3d_model, colors, onlypoints=False)
 
 
+def __main__():
+    parser = argparse.ArgumentParser(description='Basic sfm pipeline.')
+
+    # Add arguments
+    parser.add_argument('--camera_angle_x', help='camera angle in the x axis',
+                        type=int, default=0.6911112070083618)
+    parser.add_argument('--width', help='width of image', type=int, default=800)
+    parser.add_argument('--height', help='height of image', type=int, default=800)
+    parser.add_argument('--imgs_path', help='path of images', type=str, default="data\\images")
+
+    # Parse the arguments
+    args = parser.parse_args()
+
+    match_features(imgs_path=args.imgs_path, skip_step=2)
+    main(args.camera_angle_x, args.width, args.height, args.imgs_path, matching_pairs_path="matching_pairs_kornia.npy",
+         visibility_thrshold=7, device=None)
+
+
 if __name__ == "__main__":
-    main()
+    os.chdir(os.path.join(os.getcwd(), '..'))
+    __main__()
+

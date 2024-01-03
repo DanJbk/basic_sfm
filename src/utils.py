@@ -7,14 +7,20 @@ from kornia.geometry.conversions import convert_points_from_homogeneous
 from kornia.geometry.epipolar import motion_from_essential_choose_solution, find_fundamental
 
 def project_2d_to_3d(intrinsics, extrinsics, points_3d):
+    """
+    param intrinsics: Tensor, Shape: torch.Size([number of cameras, 4, 4])
+    param extrinsics: Tensor, Shape: torch.Size([number of cameras, 4, 4])
+    param points_3d: Tensor, Shape: torch.Size([number of cameras, number of points, 3])
+    return: Tensor, Shape: torch.Size([number of cameras, number of points, 2])
+    """
     P = intrinsics @ extrinsics
     return convert_points_from_homogeneous(transform_points(P, points_3d))
 
 def params_to_extrinsic(x):
     """
-    x = [Batch size, 7]
+    :param x: Parameter, Shape: torch.Size([number of cameras, 7])
+    :return: Tensor, Shape: torch.Size([number of cameras, 4, 4])
     """
-
     B = x.shape[0]
 
     rotation_matrix = quaternion_to_rotation_matrix_batch(x[:, :4])
@@ -38,17 +44,19 @@ def create_intrinsic(K):
 
 def extrinsics_to_params(extrinsics):
     """
-    extrinsics = tensor [B, 4, 4]
+    :param extrinsics: Tensor, Shape: torch.Size([number of cameras, 4, 4])
+    :return: Tensor, Shape: torch.Size([number of cameras, 7])
     """
-
     rotations = torch.tensor([rotation_matrix_to_quaternion(e).tolist() for e in extrinsics[:, :3, :3]])
     translations = extrinsics[:,:3, 3]
     extrinsics_params = torch.cat([rotations, translations], dim=1)
     return extrinsics_params
 
-
 def rotation_matrix_to_quaternion(R):
-    """Convert a rotation matrix to a quaternion."""
+    """
+    :param R: Tensor, Shape: torch.Size([3, 3])
+    :return: ndarray, Size: 4
+    """
     # Ensure the matrix is 3x3
     if R.shape != (3, 3):
         raise ValueError("The rotation matrix must be 3x3")
@@ -69,9 +77,11 @@ def rotation_matrix_to_quaternion(R):
 
     return q
 
-
 def quaternion_to_rotation_matrix_batch(qvec_batch):
-    """Convert a batch of quaternions to rotation matrices."""
+    """
+    :param qvec_batch: Tensor, Shape: torch.Size([number of cameras, 4])
+    :return: Tensor, Shape: torch.Size([number of cameras, 3, 3])
+    """
     # Validate input shape
     if qvec_batch.ndim != 2 or qvec_batch.shape[1] != 4:
         raise ValueError("Input must be a batch of quaternions with shape (n, 4)")

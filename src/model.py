@@ -11,6 +11,16 @@ from src.visibility_utils import estimate_camera_poses, create_extrinsics, move_
 
 
 def extract_3d_from_pairs(matching_pairs, imgs_path, height, K):
+
+    """
+    :param matching_pairs: ndarray, Size: number of cameras - 1
+    :param imgs_path: str
+    :param height: int
+    :param K: Tensor, Shape: torch.Size([1, 3, 3])
+    :return: list of dictionaries, Size: number of cameras
+    :return: representation of which 3d point is visible to which camera, Shape: torch.Size([number of 3d points, 40])
+    """
+
     zero_pair = {
         '0': {
             "name": matching_pairs[0]['0']['name'],
@@ -96,13 +106,24 @@ def extract_3d_from_pairs(matching_pairs, imgs_path, height, K):
 
 
 def prepare_data(camera_views, visibility_matrix, filter_visible=-1):
+    """
+    :param camera_views: list of dictionaries, Size: number of cameras
+    :param visibility_matrix: Tensor, Shape: torch.Size([original number of 3d points, number of cameras])
+    :param filter_visible: int, remove points that are not visible by this number of cameras or more
+    :return: batch_visibility: bool of which point is visible to each camera,
+        Shape: torch.Size([number of 3d points, number of cameras])
+    :return: batch_point3d: a list of Tensors, of Shape: torch.Size([number of cameras the point is visible to, 3])
+    :return: batch_point2d: a list of Tensors, of Shape: torch.Size([number of 3d points, number of cameras, 2])
+    :return: batch_colors: a list of Tensors, of Shape: torch.Size([number of cameras the point is visible to, 3])
+    """
+
     batch_point3d = []
     batch_point2d = []
     batch_colors = []
     batch_visibility = []
 
     # iterate over points
-    for i in tqdm(range(visibility_matrix.shape[0])):
+    for i in tqdm(range(visibility_matrix.shape[0]), desc="preparing data"):
 
         temp_points3d = []
         temp_colors = []
@@ -154,7 +175,23 @@ def prepare_data(camera_views, visibility_matrix, filter_visible=-1):
 
 def fit(camera_extrinsic, camera_intrinsic, labels, batch_point3d, batch_visibility, height, width, steps=3000, lr=0.005,
         train_angle=False, camera_indecies_to_train=[], fit_cam_only=False, device="cuda"):
-    # define model
+    """
+    :param camera_extrinsic: Tensor, Shape: torch.Size([number of cameras, 4, 4])
+    :param camera_intrinsic: Tensor, Shape: torch.Size([number of cameras, 4, 4])
+    :param labels: list of Tensors, Shape: torch.Size([points visible to a camera, 2])
+    :param batch_point3d: Tensor, Shape: torch.Size([number of 3d points, 3])
+    :param batch_visibility: Tensor, Shape: torch.Size([number of 3d points, number of cameras])
+    :param width: int
+    :param height: int
+    :param steps: int
+    :param lr: float
+    :param train_angle: bool
+    :param camera_indecies_to_train: list
+    :param fit_cam_only: bool
+    :param device: str
+    :return: ProjectionModel
+    :return: list of floats, Size: steps
+    """
 
     model = ProjectionModel(camera_intrinsic.clone(), camera_extrinsic.clone(), batch_point3d.clone(),
                             batch_visibility.clone(), height=height, width=width, device=device)
@@ -168,7 +205,8 @@ def fit(camera_extrinsic, camera_intrinsic, labels, batch_point3d, batch_visibil
     # fit
 
     params = [model.extrinsics_params, model.points3d]
-    if train_angle: params.append(model.camera_angle_x)
+    if train_angle:
+        params = params.append(model.camera_angle_x)
 
     # optimizer = torch.optim.Adam([model.extrinsics_params, model.points3d], lr=0.005)
     optimizer = torch.optim.Adamax(params, lr=lr)
@@ -231,8 +269,12 @@ class ProjectionModel(torch.nn.Module):
         self.points3d = torch.nn.Parameter(points3d.to(self.device), requires_grad=True)
         self.visibility = visibility.to(self.device)
 
-
     def preprocess_points3d(self, points3d):
+        """
+        :param points3d: Parameter, Shape: torch.Size([number of 3d points, 3])
+        :return: Tensor, Shape: torch.Size([number of cameras, maximum number of points visible to a camera, 3])
+        :return: Tensor, Shape: torch.Size([number of cameras])
+        """
         batch_points3d = []
         num_points_visible_for_camera = self.visibility.sum(0)
         pad_vals = num_points_visible_for_camera.max() - num_points_visible_for_camera

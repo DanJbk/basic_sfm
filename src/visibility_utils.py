@@ -38,13 +38,22 @@ def estimate_camera_poses(image1_features, image2_features, camera_matrix):
 
 
 def create_intrinsic(K):
-    # intrinsic
+    """
+    :param K: Tensor, Shape: torch.Size([1, 3, 3])
+    :return: Tensor, Shape: torch.Size([1, 4, 4])
+    """
+
     intrinsic = torch.nn.functional.pad(K, (0, 1, 0, 1))
     intrinsic[:, -1, -1] = 1
     return intrinsic
 
 
 def create_extrinsics(rotations, translations):
+    """
+    :param rotations: Tensor, Shape: torch.Size([1, 3, 3])
+    :param translations: Tensor, Shape: torch.Size([1, 3, 1])
+    :return: extrinsics: Tensor, Shape: torch.Size([1, 4, 4])
+    """
     extrinsics = torch.cat([rotations, translations], dim=-1)
 
     N = extrinsics.shape[0]
@@ -56,6 +65,11 @@ def create_extrinsics(rotations, translations):
 
 
 def move_points_to_camera_world_space(extrinsic_dst, points_3d):
+    """
+    :param extrinsic_dst: Tensor, Shape: torch.Size([1, 4, 4])
+    :param points_3d: Tensor, Shape: torch.Size([1, number of points, 3])
+    :return: Tensor, Shape: torch.Size([1, number of points, 3])
+    """
     points_3d_hom = torch.cat([points_3d, torch.ones([1, points_3d.shape[1], 1])], dim=2)
 
     extrinsic_dst_inv = torch.linalg.inv(extrinsic_dst)
@@ -69,13 +83,13 @@ def move_points_to_camera_world_space(extrinsic_dst, points_3d):
 
 def create_visibility_matrix_from_pairs(matching_pairs):
     """
-    return: matching_matrix storch.size(N points with confirmed identities, each visible across three cameras or more, N_cameras)
-    the values are the indices of the points given camera.
+    :param matching_pairs: ndarray, a list of dictionaries in matching pairs format, Size: Number of Cameras
+    :return: Tensor, Shape: torch.size(N points with confirmed identities each visible across three cameras or more, Number of Cameras)
     """
 
     matching_matrix = torch.arange(matching_pairs[0]['0']['points'].shape[0]).unsqueeze(1).long()
 
-    for i in tqdm(range(matching_pairs.shape[0] - 1)):
+    for i in tqdm(range(matching_pairs.shape[0] - 1), desc="computing visibility matrix"):
 
         # match points
         matchind_indices = torch.where(
@@ -119,7 +133,14 @@ def create_visibility_matrix_from_pairs(matching_pairs):
 
 
 def show(Rs, Ts, points_3d, colors, onlypoints=False):
-    # Calculate camera position (assuming T is translation vector)
+    """
+    :param Rs: list of Tensors, Shape: torch.Size([3, 3])
+    :param Ts: list of Tensors, Shape: torch.Size([3])
+    :param points_3d: ndarray, Size: Number of 3d points
+    :param colors: Tensor, Shape: torch.Size([Number of 3d points, 3])
+    :param onlypoints: bool
+    :return: None
+    """
     # camera_position = -R.T @ T
     camera_traces = []
     ray_traces = []
