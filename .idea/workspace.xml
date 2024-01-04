@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3afa3d38-7eb4-4c71-a153-7b79a2f339ff" name="Changes" comment=",,">
+    <list default="true" id="3afa3d38-7eb4-4c71-a153-7b79a2f339ff" name="Changes" comment="changed feature matching threshold">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feature_matching.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/feature_matching.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,15 +31,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.feature_matching.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.feature_matching.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.main">
     <configuration name="feature_matching" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="fm_bundle_adjusment" />
@@ -229,7 +228,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704323949147</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="changed feature matching threshold">
+      <option name="closed" value="true" />
+      <created>1704328516884</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1704328516884</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -241,6 +248,7 @@
     <MESSAGE value="added documentation, improved accuracy and preformance of default settings, added command-line arguments" />
     <MESSAGE value="added example data" />
     <MESSAGE value=",," />
-    <option name="LAST_COMMIT_MESSAGE" value=",," />
+    <MESSAGE value="changed feature matching threshold" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed feature matching threshold" />
   </component>
 </project>
