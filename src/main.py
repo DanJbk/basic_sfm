@@ -1,5 +1,7 @@
 import argparse
+import sys
 import os
+sys.path.append(os.getcwd())
 
 import torch
 import numpy as np
@@ -109,6 +111,8 @@ def __main__():
                         type=int, default=0.6911112070083618)
     parser.add_argument('--width', help='width of image', type=int, default=800)
     parser.add_argument('--height', help='height of image', type=int, default=800)
+    parser.add_argument('--visibility_thr', help='filter points that are not visible to a certain amount of cameras'
+                        , type=int, default=7)
     parser.add_argument('--imgs_path', help='path of images', type=str, default="data\\images")
 
     # Parse the arguments
@@ -116,10 +120,9 @@ def __main__():
 
     match_features(imgs_path=args.imgs_path, skip_step=2)
     main(args.camera_angle_x, args.width, args.height, args.imgs_path, matching_pairs_path="matching_pairs_kornia.npy",
-         visibility_thrshold=7, device=None)
+         visibility_thrshold=args.visibility_thr, device=None)
 
 
 if __name__ == "__main__":
-    os.chdir(os.path.join(os.getcwd(), '..'))
     __main__()
 

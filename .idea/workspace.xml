@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3afa3d38-7eb4-4c71-a153-7b79a2f339ff" name="Changes" comment="...">
+    <list default="true" id="3afa3d38-7eb4-4c71-a153-7b79a2f339ff" name="Changes" comment="added requirement file">
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fm_bundle_adjusment.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fm_bundle_adjusment.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,7 +252,23 @@
       <option name="project" value="LOCAL" />
       <updated>1704361045572</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="...">
+      <option name="closed" value="true" />
+      <created>1704369586745</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1704369586745</updated>
+    </task>
+    <task id="LOCAL-00019" summary="added requirement file">
+      <option name="closed" value="true" />
+      <created>1704369678913</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1704369678913</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -263,6 +282,7 @@
     <MESSAGE value=",," />
     <MESSAGE value="changed feature matching threshold" />
     <MESSAGE value="..." />
-    <option name="LAST_COMMIT_MESSAGE" value="..." />
+    <MESSAGE value="added requirement file" />
+    <option name="LAST_COMMIT_MESSAGE" value="added requirement file" />
   </component>
 </project>
