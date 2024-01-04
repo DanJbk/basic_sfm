@@ -1,0 +1,8 @@
+numpy>=1.23.5
+plotly>=5.14.1
+tqdm>=4.65.0
+matplotlib>=3.7.1
+kornia>=0.7.0
+opencv-python>=4.8.0.74
+pillow>=9.4.0
+torchvision>=0.15.0
