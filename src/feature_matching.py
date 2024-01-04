@@ -175,7 +175,7 @@ def match_features(imgs_path="data\\images", skip_step=7):
 
     with torch.inference_mode():
         for i in tqdm(range(len(relevant_paths) - 1), desc="matching features"):
-            p1, p2, image0, image1 = match_images(relevant_paths[i], relevant_paths[i + 1], lg=lg, disk=disk, thr=0.7,
+            p1, p2, image0, image1 = match_images(relevant_paths[i], relevant_paths[i + 1], lg=lg, disk=disk, thr=0.9,
                                                   device=device)
 
             matching_pairs.append({
