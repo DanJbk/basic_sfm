@@ -20,8 +20,9 @@ clone the project, install requirements
 using the command prompt from the project root, run "python src\main.py", commandline arguments are also supported
 
 # Todo
-* improve data preparation code.
-* add a workflow to append and optimize views for additional cameras gradualy, not all at once.
+* optimize data preparation code.
+* add a workflow to append and optimize views of additional cameras gradualy, not all at once.
+* add self calibration
 
 # Contributing
 Contributions are welcome! 
